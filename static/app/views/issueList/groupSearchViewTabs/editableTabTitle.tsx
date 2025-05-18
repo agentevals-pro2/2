@@ -2,6 +2,8 @@ import {useContext, useEffect, useMemo, useRef, useState} from 'react';
 import {useTheme} from '@emotion/react';
 import styled from '@emotion/styled';
 
+import {Tooltip} from 'sentry/components/tooltip';
+
 import {GrowingInput} from 'sentry/components/growingInput';
 import {TabsContext} from 'sentry/components/tabs';
 
@@ -95,6 +97,7 @@ function EditableTabTitle({
       style={memoizedStyles}
       isEditing={isEditing}
       onFocus={e => e.target.select()}
+      maxLength={128}
       onPointerDown={e => {
         e.stopPropagation();
       }}
@@ -103,7 +106,9 @@ function EditableTabTitle({
       }}
     />
   ) : (
-    <div style={{height: '20px'}}>{label}</div>
+    <Tooltip title={label} showUnderline>
+      <TruncatedLabel>{label}</TruncatedLabel>
+    </Tooltip>
   );
 }
 
@@ -127,4 +132,12 @@ const StyledGrowingInput = styled(GrowingInput)<{
   &:hover {
     box-shadow: none;
   }
+`;
+
+const TruncatedLabel = styled('div')`
+  height: 20px;
+  max-width: 50ch;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 `;
